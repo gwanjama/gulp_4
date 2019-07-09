@@ -56,7 +56,19 @@ function script(){
 function imagery(){
 	return gulp
 		.src(paths.images.src)
-		.pipe(imagemin({progressive: true, svgoPlugins: [{removeViewBox: false}], use: [pngquant()]}))
+		.pipe(
+			imagemin([
+				imagemin.gifsicle({interlaced: true}),
+				imagemin.jpegtran({progressive: true}),
+				imagemin.optipng({optimizationLevel: 5}),
+				imagemin.svgo({
+					plugins: [{
+						removeViewBox: false,
+						collapseGroups: true
+					}]
+				})
+			])
+		)
 		.pipe(gulp.dest(paths.images.dest))
 		.pipe(livereload());
 }
